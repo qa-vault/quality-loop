@@ -1,0 +1,20 @@
+{
+  "name": "quality-loop",
+  "version": "0.1.0",
+  "description": "A two-layer quality loop for AI-generated code: a deterministic pre-PR gate running your local Semgrep CE install with your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules. Works with your own Semgrep install and Greptile account; ships no vendor code and no rules.",
+  "author": {
+    "name": "Andrii",
+    "email": "andreylisenko04@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "repository": "https://github.com/qa-vault/quality-loop",
+  "keywords": [
+    "code-quality",
+    "code-review",
+    "quality-gate",
+    "static-analysis",
+    "ai-code-review",
+    "semgrep",
+    "greptile"
+  ]
+}
