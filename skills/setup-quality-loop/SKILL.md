@@ -50,11 +50,15 @@ Guide the user through connecting Greptile — their own account, never a shared
 
 ## Step 3 — Wire the richest interfaces
 
-Wire up the richest interface set available, so later skills can use the best channel and degrade gracefully:
+Wire up the richest interface set available, so later skills can use the best channel and degrade gracefully. One rule governs the whole step: **each interface gets exactly one carrier** — the same server registered twice (by a vendor plugin and again by hand) is a configuration error, not extra richness.
 
-1. **Register the official Greptile MCP server** using the harness's MCP registration mechanism, with the endpoint and auth the current Greptile documentation declares. Register at the user/session level, never in project-tracked files — the nothing-version-specific rule applies to MCP registration itself. The user supplies their own API key; help them store it the way the harness expects, never in tracked files.
-2. **On Claude Code, additionally guide the user to install Greptile's official plugin** from the harness's plugin marketplace. On other harnesses, the MCP server plus the host API is the full stack.
-3. **Verify reachability.** Confirm the MCP tools are listed and respond. If MCP cannot be established, the loop still works over the host API alone — record nothing, tell the user which fidelity they are running at, and continue.
+1. **Plugin-first.** Where the vendor ships an official plugin for this harness, guide the user to install it from the harness's plugin marketplace — the plugin is the carrier of the vendor's MCP server, so no manual registration of the same server happens alongside it. Only where no official plugin exists for the harness, register the official MCP server manually via the harness's MCP registration mechanism, with the endpoint and auth the current vendor documentation declares — at the user/session level, never in project-tracked files.
+2. **Read the credential contract from the carrier.** How the API key must be supplied is defined by whichever carrier is in play: an installed plugin declares its expectation in its own manifest/config (typically an environment variable it interpolates); a manual registration follows the vendor's current docs. Never assume a header, flag, or variable name from memory — a key supplied the wrong way produces a server that half-works or silently fails to start.
+3. **Provision the reviewer API key — a gate, not a courtesy.** Without the credential the interface tier is dead, so this step blocks setup completion. Offer two scopes, defaulting to project-local:
+   - **Project-local (default):** the key lives in the project's untracked local configuration — the harness's per-project environment mechanism. Different projects can use different reviewer accounts, nothing leaks through the repo, and the key sits next to the repo its app installation belongs to.
+   - **User-global:** the harness's user-level configuration or shell profile, when the user prefers one account everywhere.
+   Prepare the exact snippet for the chosen scope, and expect the harness to require the user to apply it by hand — agent writes to harness settings are often denied, and that is the normal flow, not an error.
+4. **Verify reachability — including duplicates.** Confirm the tier actually works: list the tools and make one live authenticated call — an invalid key fails with an auth error; a valid one returns a well-formed response, even an empty one. Check for double registration: the same server configured both by a plugin and manually is a conflict — surface it and offer to remove the manual one. If the tier cannot be established, the loop still works over the host API alone — tell the user which fidelity they are running at, and continue.
 
 ## Step 4 — The marker
 
@@ -90,4 +94,4 @@ This is the plugin's only own artifact in the repository. Everything else setup 
 
 ## Done means
 
-Semgrep runs locally; `.semgrep/rules/` exists with only user-approved rules, each with passing fixtures; the gate is green on the current codebase; Greptile is installed, indexed, and configured in-repo; the richest available interfaces are wired; `QUALITY-LOOP.md` is at the root. Report the fidelity level (full MCP vs host-API-only) to the user as the last word.
+Semgrep runs locally; `.semgrep/rules/` exists with only user-approved rules, each with passing fixtures; the gate is green on the current codebase; Greptile is installed, indexed, and configured in-repo; the richest available interfaces are wired with the reviewer credential verified by a live call; `QUALITY-LOOP.md` is at the root. Report the fidelity level (full MCP vs host-API-only) to the user as the last word.
