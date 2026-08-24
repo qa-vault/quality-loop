@@ -20,7 +20,7 @@ The ratchet: the mechanism by which the loop learns. A class of problem that cos
 ## Operating discipline
 
 - **Judgment, not counting.** There is no occurrence threshold. A critical pattern — security, data integrity, an architectural invariant — is proposable from a single occurrence; a shrug-grade nit is not proposable after ten.
-- **Clean provenance.** Author every Semgrep rule from scratch against this project's own convention or incident, in the schema the current Semgrep documentation declares, with fixtures exercising both the violating and the clean pattern via the current fixture mechanism. Never fetch registry rule YAML as authoring material.
+- **Provenance governs your initiative.** Rules you author come from scratch against this project's own convention or incident, in the schema the current Semgrep documentation declares, with fixtures exercising both the violating and the clean pattern via the current fixture mechanism — never from registry rule YAML as authoring material. Rules the user explicitly asks to bring in from an external pack are vendored, not authored — a legitimate path (the setup skill's external-pack route, license note included) that passes the same fixtures / dry-run / approval bar as everything else.
 - **Discover, don't assume.** Current rule schema, fixture mechanism, and review-guidance format come from the tools' current documentation and interfaces, per-session — never from memory, per the setup skill's discovery protocol (`../setup-quality-loop/references/interface-discovery.md`).
 - **Propose, never apply.** Every promotion lands as a reviewed diff (or an explicit approval for anything outside the repo). Nothing activates on your own authority.
 

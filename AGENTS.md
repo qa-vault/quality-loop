@@ -34,8 +34,8 @@ quality-loop makes an AI agent operate a two-layer quality process around its ow
 
 These bind every current and future skill in this repo. They come from the design and legal review (see the design doc in the author's project records) — do not relax them without that context:
 
-1. **No rule YAML in this repo, ever.** Not as examples, not in references, not in tests. Rules exist only in user repositories, authored fresh against each project's own conventions. (Legal provenance constraint — AI-regenerated registry rules in a distributed repo are the one real infringement vector.)
-2. **Provenance rule, verbatim in skills that author rules:** never fetch registry rule YAML as authoring material; every rule traces to an invariant the user's project declared about itself.
+1. **No rule YAML in this repo, ever.** Not as examples, not in references, not in tests. Rules exist only in user repositories. (Legal provenance constraint — AI-regenerated registry rules in a distributed repo are the one real infringement vector.)
+2. **Provenance governs the agent's initiative, never the user's.** In skills that author rules: on its own initiative the agent proposes only rules derived from the project's declared invariants or review findings, and never uses registry rule YAML as authoring material. Vendoring external rules into the *user's* repo happens only at the user's explicit request, with a license note, through the same approval/fixtures/dry-run bar as any rule.
 3. **Staleness resistance:** no version-specific tool details in skill text — no CLI flags, MCP tool names, endpoints, or config schemas stated as facts. Skills instruct runtime discovery (help output, MCP listings, current official docs).
 4. **Principles tone:** invariants and criteria for an intelligent executor, not step scripts where a script isn't needed.
 5. **Each skill embeds its own discipline inline** — there is no shared conventions skill.

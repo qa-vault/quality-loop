@@ -7,7 +7,7 @@ How to establish what the tools offer *today*, in this environment. Run discover
 1. **Presence:** invoke the CLI with its help flag. Absent → install by the method the current official documentation prefers, then re-verify.
 2. **Capabilities:** from the CLI's own help output, establish the current shape of: scanning with a local rules directory, machine-readable output, the findings-as-failure exit mode, and the rule fixture-test mechanism. The help output is the authority; official docs fill gaps.
 3. **Rule schema:** when authoring rules, consult the current official rule-syntax documentation (or a machine-readable schema if the project of record publishes one). Accept that severity vocabularies and field sets evolve — author to what the installed version accepts, and prove it by running the fixtures.
-4. **Boundary:** local scanning with local rules is the loop's home turf — it requires no login and sends nothing anywhere. Anything that fetches remote rulesets is outside this skill's writ (provenance rule) and changes the privacy posture; do not introduce it during setup.
+4. **Boundary:** local scanning with locally vendored rules is the gate's home turf — no login, nothing sent anywhere, reproducible offline. What stays out of the **gate** is runtime-fetching of registry configs (registry-pack or auto-resolved rulesets pulled from the network at scan time) — non-deterministic between runs and a privacy-posture change. Vendoring user-chosen registry rules into the repo is an allowed path (see the setup skill's external-pack route), and a one-off local audit run with registry packs *outside* the gate — its findings feeding the ratchet as candidates for the project's own rules — is a supported pattern.
 
 ## Greptile
 

@@ -27,7 +27,7 @@ These rules govern every step below:
 
 - **Review-gated writes.** Every file this skill creates or modifies in the user's repository — rules, fixtures, review config, the marker — is shown to the user and approved before it lands. Setup is a conversation, not a script.
 - **Discover, don't assume.** Tool interfaces change. Establish what Semgrep and Greptile offer *today* from their current documentation and the interfaces present in this environment (`--help`, MCP tool listings, official docs) — never from memory of version-specific commands, flags, tool names, or config schemas. See `references/interface-discovery.md` for the discovery protocol.
-- **Clean rule provenance.** Never seed from generic security patterns, registry rulesets, or anything not derived from this project's own declared conventions. Never fetch registry rule YAML as authoring material. Every rule you propose must trace to an invariant this project declared about itself.
+- **Rule provenance governs your initiative, not the user's.** On your own initiative, propose only rules derived from invariants this project declared about itself or from its review findings — never generic security patterns or registry rulesets "for completeness", and never registry rule YAML as raw material for rules you author. When the **user** asks to bring in specific external rules, that is their legitimate call as the process owner: vendoring a rule they chose is copying at their request, not authoring, and it passes the same quality bar as every other rule (Step 1.5).
 - **Nothing version-specific lands in the repo.** Interface details (endpoints, tool names, CLI flags) are discovered per-session, never recorded in project-tracked files.
 
 ## Step 1 — Deterministic layer
@@ -35,10 +35,15 @@ These rules govern every step below:
 1. **Verify or install Semgrep CE.** Check whether Semgrep is available locally. If not, install it by the method its current official documentation prefers, and confirm the install with a trivial invocation. Community Edition running locally is the target — no account or platform login is required for the loop.
 2. **Discover the project's existing formal checks.** Read the project's own scripts and CI configuration to learn what already gates quality here: linters, typecheck, formatters, test commands. The quality gate wraps *all* formal checks, with Semgrep as the layer this process adds — it does not replace what the project already runs.
 3. **Create the rules home.** Create `.semgrep/rules/` as the project's rules directory. Rules and their test fixtures live here, versioned with the code.
-4. **Seed rules from declared invariants only.** Ask the user (and read the project's spec, conventions, and agent-context files) for invariants the project has *declared*: "all HTTP goes through our wrapper", "colors come from tokens, never hardcoded", "no secrets in client-exposed variables". For each invariant that is expressible as a syntactic or structural match, propose a rule:
-   - authored from scratch against that invariant, in the rule schema the current Semgrep documentation declares;
-   - accompanied by test fixtures exercising both the violating and the clean pattern, passing the current fixture-test mechanism;
-   - presented to the user individually — the user picks which rules land. No declared invariants means the directory starts empty; that is a valid outcome. The ratchet will grow it.
+4. **Seed rules — two legitimate sources.**
+   - **From declared invariants (your initiative).** Ask the user (and read the project's spec, conventions, and agent-context files) for invariants the project has *declared*: "all HTTP goes through our wrapper", "colors come from tokens, never hardcoded", "no secrets in client-exposed variables". For each invariant expressible as a syntactic or structural match, propose a rule authored from scratch against it, in the rule schema the current Semgrep documentation declares. Never propose generic or registry rules on your own initiative; no declared invariants means the directory starts empty — a valid outcome the ratchet will grow.
+   - **From external packs (the user's initiative).** If the user asks to include specific external rules — a selection from a registry pack, an industry ruleset — that is a legitimate way to strengthen the gate. Help them choose well: show what the pack offers, shortlist what is relevant to this project, drop the knowingly noisy ones. One license line applies: registry community rules come under Semgrep's rules license — internal use in your own gate is permitted, redistribution is not — so flag the implications when the repo is public, and check the license of third-party packs before vendoring.
+5. **One bar for every rule, regardless of origin.** This, not provenance, is the gate's quality invariant:
+   - lands only through the user's explicit approval, presented individually;
+   - vendored locally into `.semgrep/rules/` as plain rule files — the gate never fetches rules from the network at scan time (determinism, offline, no registry usage metrics);
+   - carries test fixtures passing the current fixture-test mechanism — for an external rule that lacks one, write the fixture yourself;
+   - dry-runs over the codebase before acceptance: existing hits are resolved by the user (fix / adjust the rule / consciously defer) and the gate ends green;
+   - the ratchet applies equally: weakening or removal is its own conscious user decision.
 
 ## Step 2 — AI-review layer
 

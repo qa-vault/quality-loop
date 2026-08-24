@@ -1,6 +1,6 @@
 # Promotion Criteria — Calibration
 
-Worked examples for the four-way weighing (severity · formalizability · recurrence · false-positive cost). Patterns are described in prose deliberately — rule code is authored fresh against the live schema at promotion time, never copied from anywhere.
+Worked examples for the four-way weighing (severity · formalizability · recurrence · false-positive cost). Patterns are described in prose deliberately — agent-authored rule code is written fresh against the live schema at promotion time; the only copying is user-requested vendoring of external rules (the setup skill's external-pack route).
 
 ## Formalizable — Semgrep-rule territory
 
