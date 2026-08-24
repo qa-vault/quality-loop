@@ -1,6 +1,14 @@
 ---
 name: setup-quality-loop
-description: Use when installing or onboarding the quality loop into a project — "set up the quality loop", "install the semgrep gate and greptile review process", "onboard this repo onto quality-loop" — or when QUALITY-LOOP.md exists in the repo but the local toolchain (Semgrep, Greptile access) is not wired up. Verifies or installs Semgrep CE, connects the user's own Greptile account (repo app, in-repo review config, MCP server; on Claude Code also Greptile's official plugin), creates the project rules directory seeded only from the project's own declared invariants, writes the QUALITY-LOOP.md marker, and dry-runs the gate. Conversational and review-gated — every file written into the repo is approved by the user first.
+description: >-
+  Use when installing or onboarding the quality loop into a project — "set up the quality loop",
+  "install the semgrep gate and greptile review process", "onboard this repo onto quality-loop" —
+  or when QUALITY-LOOP.md exists in the repo but the local toolchain (Semgrep, Greptile access) is
+  not wired up. Verifies or installs Semgrep CE, connects the user's own Greptile account (repo
+  app, in-repo review config, MCP server; on Claude Code also Greptile's official plugin), creates
+  the project rules directory seeded only from the project's own declared invariants, writes the
+  QUALITY-LOOP.md marker, and dry-runs the gate. Conversational and review-gated — every file
+  written into the repo is approved by the user first.
 ---
 
 # Set Up the Quality Loop

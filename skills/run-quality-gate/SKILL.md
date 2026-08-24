@@ -1,6 +1,12 @@
 ---
 name: run-quality-gate
-description: Use before every push and before opening or updating a pull request in a repository with QUALITY-LOOP.md — and on demand ("run the gate", "check my changes against the rules") — to run the deterministic quality layer: Semgrep with the project's own rules plus the project's linters, typecheck, and other formal checks. Findings are fixed autonomously until green (fixes that would change product behavior escalate instead); a PR that fails the gate is never opened or updated. Tool or config errors are a broken gate, never a pass.
+description: >-
+  Use before every push and before opening or updating a pull request in a repository with
+  QUALITY-LOOP.md — and on demand ("run the gate", "check my changes against the rules") — to run
+  the deterministic quality layer: Semgrep with the project's own rules plus the project's linters,
+  typecheck, and other formal checks. Findings are fixed autonomously until green (fixes that would
+  change product behavior escalate instead); a PR that fails the gate is never opened or updated.
+  Tool or config errors are a broken gate, never a pass.
 ---
 
 # Run the Quality Gate

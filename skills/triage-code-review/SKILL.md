@@ -1,6 +1,14 @@
 ---
 name: triage-code-review
-description: Use when an AI code review has landed on a pull request in a quality-loop project (QUALITY-LOOP.md present) — "process the review", "triage the greptile comments", "address the review comments", "the review is in" — or when a PR was opened and the review should have arrived. Detects skipped or failed reviews, steelmans each comment, verifies it against code and spec, escalates product-behavior items to the user, decides technical ones autonomously with argued verdicts, applies accepted fixes, replies in-thread, sets thumbs reactions, and posts a one-comment cycle digest. Never blindly applies review comments — supersedes any vendor auto-fix loop inside the quality-loop process.
+description: >-
+  Use when an AI code review has landed on a pull request in a quality-loop project
+  (QUALITY-LOOP.md present) — "process the review", "triage the greptile comments", "address the
+  review comments", "the review is in" — or when a PR was opened and the review should have
+  arrived. Detects skipped or failed reviews, steelmans each comment, verifies it against code and
+  spec, escalates product-behavior items to the user, decides technical ones autonomously with
+  argued verdicts, applies accepted fixes, replies in-thread, sets thumbs reactions, and posts a
+  one-comment cycle digest. Never blindly applies review comments — supersedes any vendor auto-fix
+  loop inside the quality-loop process.
 ---
 
 # Triage the Code Review
@@ -13,7 +21,7 @@ The AI reviewer advises; you judge; the user owns product behavior. This skill t
 
 ## Operating discipline
 
-- **Discover, don't assume.** Establish the interfaces available this session (MCP tools listing → CLI → host API) per the setup skill's discovery protocol (`setup-quality-loop/references/interface-discovery.md`); use the richest, degrade gracefully. Identify the reviewer bot by author pattern (a bot-type account whose login contains the vendor name), never a hardcoded login.
+- **Discover, don't assume.** Establish the interfaces available this session (MCP tools listing → CLI → host API) per the setup skill's discovery protocol (`../setup-quality-loop/references/interface-discovery.md`); use the richest, degrade gracefully. Identify the reviewer bot by author pattern (a bot-type account whose login contains the vendor name), never a hardcoded login.
 - **You are judging your own code — respect the hazard.** The same session that wrote the code judges its review. The compensator is procedural, and it is not optional: **before judging any comment, argue it as if it came from a stronger reviewer than you; the verdict comes only after checking the claim against the code, the spec, and observable facts.** "That's not how I meant it" is not a verdict.
 - **Nothing is infallible.** A comment can be wrong; so can the code; so can the spec or a gate rule the comment collides with. When a comment contradicts the spec, run the three-way analysis — code error, review error, or spec error — and treat a suspected spec error as a product-domain finding to escalate as an improvement proposal, not a point automatically won by either side.
 

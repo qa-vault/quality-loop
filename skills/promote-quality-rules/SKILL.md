@@ -1,6 +1,14 @@
 ---
 name: promote-quality-rules
-description: Use after a review cycle closes in a quality-loop project, when the user asks "should anything become a rule?" / "make a rule for this" / "can we catch this automatically next time", or when the spec declares new invariants worth formalizing. Judges findings for promotion — severity, formalizability, recurrence likelihood, false-positive cost — and routes them: formalizable patterns become Semgrep rules with test fixtures in the project's rules directory; recurring non-formalizable patterns become review guidance in the repo's review config. Every promotion is a proposed diff for user approval, deduplicated against existing rules; the ratchet only tightens — weakening or removing a rule is its own explicit escalation.
+description: >-
+  Use after a review cycle closes in a quality-loop project, when the user asks "should anything
+  become a rule?" / "make a rule for this" / "can we catch this automatically next time", or when
+  the spec declares new invariants worth formalizing. Judges findings for promotion — severity,
+  formalizability, recurrence likelihood, false-positive cost — and routes them: formalizable
+  patterns become Semgrep rules with test fixtures in the project's rules directory; recurring
+  non-formalizable patterns become review guidance in the repo's review config. Every promotion is
+  a proposed diff for user approval, deduplicated against existing rules; the ratchet only tightens
+  — weakening or removing a rule is its own explicit escalation.
 ---
 
 # Promote Quality Rules
@@ -13,7 +21,7 @@ The ratchet: the mechanism by which the loop learns. A class of problem that cos
 
 - **Judgment, not counting.** There is no occurrence threshold. A critical pattern — security, data integrity, an architectural invariant — is proposable from a single occurrence; a shrug-grade nit is not proposable after ten.
 - **Clean provenance.** Author every Semgrep rule from scratch against this project's own convention or incident, in the schema the current Semgrep documentation declares, with fixtures exercising both the violating and the clean pattern via the current fixture mechanism. Never fetch registry rule YAML as authoring material.
-- **Discover, don't assume.** Current rule schema, fixture mechanism, and review-guidance format come from the tools' current documentation and interfaces, per-session — never from memory, per the setup skill's discovery protocol (`setup-quality-loop/references/interface-discovery.md`).
+- **Discover, don't assume.** Current rule schema, fixture mechanism, and review-guidance format come from the tools' current documentation and interfaces, per-session — never from memory, per the setup skill's discovery protocol (`../setup-quality-loop/references/interface-discovery.md`).
 - **Propose, never apply.** Every promotion lands as a reviewed diff (or an explicit approval for anything outside the repo). Nothing activates on your own authority.
 
 ## Step 1 — Harvest candidates
