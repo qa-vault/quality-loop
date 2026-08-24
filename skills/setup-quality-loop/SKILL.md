@@ -19,7 +19,7 @@ Onboard a project onto the **quality loop**: a two-layer quality process where a
 
 Full setup happens once per repository; each collaborator's machine may still need local wiring. When setup finishes, the loop is runnable end to end: the gate passes on the current codebase, the reviewer is connected, and the repo carries a marker file that declares the process.
 
-**On an already-onboarded repo** (marker present, toolchain not wired locally), every step below becomes verify-don't-recreate: confirm rules, review config, and marker are in place rather than re-proposing them; do fresh only the local wiring — Semgrep install, MCP registration, key storage. This path expects zero repo writes.
+**On an already-onboarded repo** (marker present, toolchain not wired locally), every step below becomes verify-don't-recreate: confirm rules, review config, and marker are in place rather than re-proposing them; do fresh only the local wiring — Semgrep install, carrier install (official plugin, or manual MCP registration where none exists), key storage. This path expects zero repo writes.
 
 ## Operating discipline
 
@@ -28,7 +28,7 @@ These rules govern every step below:
 - **Review-gated writes.** Every file this skill creates or modifies in the user's repository — rules, fixtures, review config, the marker — is shown to the user and approved before it lands. Setup is a conversation, not a script.
 - **Discover, don't assume.** Tool interfaces change. Establish what Semgrep and Greptile offer *today* from their current documentation and the interfaces present in this environment (`--help`, MCP tool listings, official docs) — never from memory of version-specific commands, flags, tool names, or config schemas. See `references/interface-discovery.md` for the discovery protocol.
 - **Clean rule provenance.** Never seed from generic security patterns, registry rulesets, or anything not derived from this project's own declared conventions. Never fetch registry rule YAML as authoring material. Every rule you propose must trace to an invariant this project declared about itself.
-- **Nothing version-specific lands in the repo.** Interface details (endpoints, tool names, CLI flags) are discovered per-session, never recorded in project files.
+- **Nothing version-specific lands in the repo.** Interface details (endpoints, tool names, CLI flags) are discovered per-session, never recorded in project-tracked files.
 
 ## Step 1 — Deterministic layer
 
@@ -57,8 +57,8 @@ Wire up the richest interface set available, so later skills can use the best ch
 3. **Provision the reviewer API key — a gate, not a courtesy.** Without the credential the interface tier is dead, so this step blocks setup completion. Offer two scopes, defaulting to project-local:
    - **Project-local (default):** the key lives in the project's untracked local configuration — the harness's per-project environment mechanism. Different projects can use different reviewer accounts, nothing leaks through the repo, and the key sits next to the repo its app installation belongs to.
    - **User-global:** the harness's user-level configuration or shell profile, when the user prefers one account everywhere.
-   Prepare the exact snippet for the chosen scope, and expect the harness to require the user to apply it by hand — agent writes to harness settings are often denied, and that is the normal flow, not an error.
-4. **Verify reachability — including duplicates.** Confirm the tier actually works: list the tools and make one live authenticated call — an invalid key fails with an auth error; a valid one returns a well-formed response, even an empty one. Check for double registration: the same server configured both by a plugin and manually is a conflict — surface it and offer to remove the manual one. If the tier cannot be established, the loop still works over the host API alone — tell the user which fidelity they are running at, and continue.
+   Prepare the exact snippet for the chosen scope, and expect the harness to require the user to apply it by hand — agent writes to harness settings are often denied, and that is the normal flow, not an error. If the user ultimately declines to provision a key, remove the carrier and complete at host-API fidelity — a wired-but-dead tier is the one state setup must never leave behind.
+4. **Verify reachability — including duplicates.** After the key lands, have the harness reload the carrier however it requires, then confirm the tier actually works: list the tools and make one live authenticated call — an invalid key fails with an auth error; a valid one returns a well-formed response, even an empty one. Check for double registration: the same server configured both by a plugin and manually is a conflict — surface it and offer to remove the manual one. If no carrier exists for this harness at all — no official plugin and no manual registration path — the loop still works over the host API alone: tell the user which fidelity they are running at, and continue. A wired carrier that fails authentication is not this case — resolve the key, or remove the carrier, before setup is declared done.
 
 ## Step 4 — The marker
 
@@ -94,4 +94,4 @@ This is the plugin's only own artifact in the repository. Everything else setup 
 
 ## Done means
 
-Semgrep runs locally; `.semgrep/rules/` exists with only user-approved rules, each with passing fixtures; the gate is green on the current codebase; Greptile is installed, indexed, and configured in-repo; the richest available interfaces are wired with the reviewer credential verified by a live call; `QUALITY-LOOP.md` is at the root. Report the fidelity level (full MCP vs host-API-only) to the user as the last word.
+Semgrep runs locally; `.semgrep/rules/` exists with only user-approved rules, each with passing fixtures; the gate is green on the current codebase; Greptile is installed, indexed, and configured in-repo; the richest available interfaces are wired — any wired MCP carrier has its reviewer credential verified by a live call; `QUALITY-LOOP.md` is at the root. Report the fidelity level (full MCP vs host-API-only) to the user as the last word.
