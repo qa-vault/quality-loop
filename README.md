@@ -39,16 +39,62 @@ The review leg sends your PR content to your own Greptile cloud account — acco
 
 ## Install
 
-Claude Code:
+`quality-loop` is distributed through the `qa-vault` marketplace catalog. Installing it is **self-contained** — you do not need any other `qa-vault` plugin (such as `qa-vault-skills` or `codelore`) installed first. Pick the section for your tool.
 
-```
-/plugin marketplace add qa-vault/marketplace
-/plugin install quality-loop@qa-vault
-```
+### Claude Code
 
-Codex CLI: install from the same `qa-vault/marketplace` catalog with your Codex version's plugin mechanism.
+1. **Add the marketplace** (one-time):
 
-Then, in the project you want onboarded, ask your agent to *"set up the quality loop"*.
+   ```
+   /plugin marketplace add qa-vault/marketplace
+   ```
+
+   This fetches the catalog of `qa-vault` plugins from GitHub — no code is installed yet. (If you already added it for another `qa-vault` plugin, skip this step.)
+
+2. **Install the plugin**:
+
+   ```
+   /plugin install quality-loop@qa-vault
+   ```
+
+   Claude Code will ask where to install:
+   - **User** — available in every project on your machine (recommended for personal use)
+   - **Project** — only active in this project, shared with teammates via `.claude/settings.json`
+   - **Local** — only for you, only in this project
+
+3. **Verify** — type `/` and you should see `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, and `promote-quality-rules` (each annotated `(quality-loop)`).
+
+**Updates:** Claude Code auto-updates installed plugins at startup.
+
+### Codex CLI
+
+Codex has its own plugin marketplace system; the flow mirrors Claude Code's and is fully independent of any other plugin.
+
+> **Requires Codex CLI 0.122+.** The `url` source variant this catalog uses shipped in stable 0.122 (2026-04-20); earlier 0.121.x releases accept only `local` plugin sources. Upgrade to 0.122 or later.
+
+1. **Add the marketplace** (one-time):
+
+   ```
+   codex plugin marketplace add qa-vault/marketplace
+   ```
+
+   (If you already added it for another `qa-vault` plugin, skip this step.)
+
+2. **Install the plugin** — inside Codex, open the plugin browser:
+
+   ```
+   /plugins
+   ```
+
+   Find `quality-loop` under the `qa-vault` marketplace and toggle it on to install. (`/plugins` is an interactive browser — it does not accept inline arguments.)
+
+3. **Verify** — type `$` in the Codex composer to open the skill-mention popup; `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, and `promote-quality-rules` should be listed. Invoke one explicitly with `$<skill-name> <your request>`, or let Codex auto-detect when your prompt matches a skill's description.
+
+**Updates:** refresh with `codex plugin marketplace upgrade qa-vault` periodically.
+
+### First run
+
+In the project you want onboarded, ask your agent to *"set up the quality loop"* — the setup skill drives everything from there.
 
 ## License
 
