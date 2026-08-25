@@ -1,6 +1,6 @@
 # quality-loop
 
-A two-layer quality loop for AI-assisted development: a deterministic pre-PR gate built on your local Semgrep CE install and your project's own rules, plus critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules. Alongside the loop, a contract-driven unit-testing discipline governs the tests the agent writes: assert what the unit promises, never how it works, verified by mutation testing.
+A three-layer quality loop for AI-assisted development: a contract-driven unit-testing discipline governing the tests the agent writes (assert what the unit promises, never how it works — verified by mutation testing), a deterministic pre-PR gate built on your local Semgrep CE install and your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules.
 
 Skills for AI coding agents, installable in Claude Code and Codex CLI.
 

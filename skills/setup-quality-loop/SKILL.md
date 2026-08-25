@@ -15,7 +15,7 @@ description: >-
 
 ## Overview
 
-Onboard a project onto the **quality loop**: a two-layer quality process where a deterministic gate (Semgrep with the project's own rules, plus the project's existing formal checks) runs locally before every PR, an AI reviewer (Greptile) reviews every PR with whole-codebase context, and findings crystallize into rules over time — always through the user's approval.
+Onboard a project onto the **quality loop**: a three-layer quality process where a contract-driven discipline governs the unit tests the agent writes, a deterministic gate (Semgrep with the project's own rules, plus the project's existing formal checks) runs locally before every PR, an AI reviewer (Greptile) reviews every PR with whole-codebase context, and findings crystallize into rules over time — always through the user's approval. The testing discipline ships ready with the plugin and needs no onboarding — this skill wires up the gate and review layers.
 
 Full setup happens once per repository; each collaborator's machine may still need local wiring. When setup finishes, the loop is runnable end to end: the gate passes on the current codebase, the reviewer is connected, and the repo carries a marker file that declares the process.
 
@@ -72,8 +72,9 @@ Write `QUALITY-LOOP.md` at the repository root, exactly this content — the use
 ```markdown
 # Quality Loop
 
-This repository runs the **quality-loop** process: a two-layer quality gate for AI-assisted development.
+This repository runs the **quality-loop** process: a three-layer quality process for AI-assisted development.
 
+- **Testing discipline** — unit tests in this repository follow the contract-driven discipline: they assert what the unit promises, never how it works, verified by mutation testing.
 - **Deterministic layer** — Semgrep with this project's own rules (plus the project's linters and typecheck) runs locally before every PR. A PR that fails the gate is never opened.
 - **AI review layer** — Greptile reviews every PR with whole-codebase context; the implementing agent critically triages every comment and answers with argued verdicts.
 - **Ratchet** — findings worth keeping become rules: formalizable patterns as Semgrep rules with test fixtures, recurring semantic ones as review guidance in the repo's review config. Every promotion is a human-approved diff; the ratchet only tightens.
