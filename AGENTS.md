@@ -16,9 +16,12 @@ quality-loop/
 │   ├── triage-code-review/
 │   │   ├── SKILL.md
 │   │   └── references/digest-and-escalation.md
-│   └── promote-quality-rules/
+│   ├── promote-quality-rules/
+│   │   ├── SKILL.md
+│   │   └── references/promotion-criteria.md
+│   └── contract-driven-unit-tests/
 │       ├── SKILL.md
-│       └── references/promotion-criteria.md
+│       └── references/            # property-based.md, contract-doc.md
 ├── README.md
 ├── LICENSE                             # Apache-2.0
 └── AGENTS.md                           # this file
@@ -36,7 +39,7 @@ These bind every current and future skill in this repo. They come from the desig
 
 1. **No rule YAML in this repo, ever.** Not as examples, not in references, not in tests. Rules exist only in user repositories. (Legal provenance constraint — AI-regenerated registry rules in a distributed repo are the one real infringement vector.)
 2. **Provenance governs the agent's initiative, never the user's.** In skills that author rules: on its own initiative the agent proposes only rules derived from the project's declared invariants or review findings, and never uses registry rule YAML as authoring material. Vendoring external rules into the *user's* repo happens only at the user's explicit request, with a license note, through the same approval/fixtures/dry-run bar as any rule.
-3. **Staleness resistance:** no version-specific tool details in skill text — no CLI flags, MCP tool names, endpoints, or config schemas stated as facts. Skills instruct runtime discovery (help output, MCP listings, current official docs).
+3. **Staleness resistance:** no version-specific tool details in skill text — no CLI flags, MCP tool names, endpoints, or config schemas stated as facts. Skills instruct runtime discovery (help output, MCP listings, current official docs). The boundary: this targets vendor tool *interfaces*, which drift independently of a skill's subject; library-level APIs that are a skill's subject matter (a test runner's or testing library's documented API in a testing skill) are legitimate content.
 4. **Principles tone:** invariants and criteria for an intelligent executor, not step scripts where a script isn't needed.
 5. **Each skill embeds its own discipline inline** — there is no shared conventions skill.
 6. **User sovereignty:** every repo write is user-approved; promotions are proposals; the ratchet only tightens; escalation routes by impact domain, never reviewer confidence.
