@@ -88,6 +88,7 @@ attention to it. Do not treat "this is how tests are written here" as permission
 | Fixture and factory placement, naming, formatting — not their mutability | Whole-object equality, snapshots; shared mutable fixtures |
 | `describe` / `it` nesting shape | What is mocked, and at which seam |
 | Which assertion library helpers are in use | Asserting order, error text, call counts, private state |
+| How the suite is invoked — scripts, watch mode, reporters | The environment a browser-designated unit runs in — a real browser, never a DOM simulation |
 
 Cosmetic conventions carry no correctness content, so conforming costs nothing and keeps a
 diff readable. Substantive ones decide whether the suite is an asset or a liability, and
@@ -261,6 +262,14 @@ something the type system already guarantees. The coverage instinct produces pil
 on internal helpers, and each becomes a tripwire that fires on legal refactors; a missing
 test on a trivial helper costs approximately nothing.
 
+The verdict has a second dimension: **at which level**. When A2–A4 surfaced promises
+that only hold as joint outcomes with real infrastructure — writes that commit
+together, a storage constraint refusing, conflict behaviour — those promises are not
+provable under this skill's boundary mocks, however the suite is arranged. Route them
+to `contract-driven-integration-tests` per "First, confirm the level", and keep at
+this level only what a single unit exhibits on its own; improvising real-database
+tests under this skill's rules is the routing failing, not thoroughness.
+
 **Output of Phase A**: the classified behaviour table, the invariants, and this verdict.
 The table has fixed columns — *behaviour | classification | heuristic applied | evidence
 (file:line) | open question* — because a free-form report can compress a nuance away
@@ -270,14 +279,21 @@ be corrected; A3 is the part a human should review.
 
 ## Standing up the instruments
 
-Phase B leans on two dev-only dependencies, and the moment to check for them is now —
+Phase B leans on a small set of dev-only instruments, and the moment to check for them is now —
 after the verdict says tests are warranted, before the first test is written:
 
 - **Stryker** (`@stryker-mutator/core` plus the runner plugin matching the suite) — runs
   the mutation step that closes every engagement.
 - **fast-check** — turns A4's invariants into property-based tests.
+- **Vitest Browser Mode** — when the unit is a component, or a hook that touches the
+  DOM: code written for a browser runs in a real browser instance, because jsdom is
+  itself a mock of the browser and this skill's own mocking rule applies to it. The
+  environment is substantive, not cosmetic — a project already configured for jsdom
+  is precedent, and precedent is not permission. Propose the provider and the
+  framework helper as dev-only installs like the other instruments; a declined
+  install runs the tests in the configured simulation and names that in the summary.
 
-If either is missing, propose the install now — the package, that it is dev-only, and
+If any of these is missing, propose the install now — the package, that it is dev-only, and
 the mandatory step it unlocks — and wait for agreement before touching `package.json`.
 A dependency is always the engineer's call. What is not optional is the proposal
 itself: the failure mode this step exists to prevent is silence, where the tool is
@@ -465,6 +481,17 @@ is a finding, never something to let pass silently. The interceptor is a dev-onl
 dependency and follows the same proposal rule as the instruments section: propose,
 agree, then install.
 
+The shapes a handler serves are a foreign service's contract, and a contract is
+collected, never guessed. Survey every source available — docs, schema files,
+published types, other layers' tests — and treat two sources that disagree as a
+finding to raise, not a choice to make silently. When the only source is this
+codebase's own client, say so explicitly: a handler that mirrors the client can never
+catch the client diverging from the real service, so record the self-reference as a
+risk and the absence of an independent source as a finding, rather than presenting
+the mirrored shape as the service's contract. And never derive the contract from a
+single observed response — one response is one shape the service *can* produce, not
+the set of shapes it *may* produce.
+
 Note that failing on unhandled requests does not catch a *duplicated* request — the
 second call to a handled endpoint is still handled. When A3 classified "one request per
 resource" as a promise, assert the handler's call count explicitly: that assertion is
@@ -594,6 +621,12 @@ Both modes:
 - [ ] Network interception is protocol-level, or the summary names the reason it is not
       (declined install or technical blocker) — never a silent fallback to mocking the
       HTTP client's module
+- [ ] Handler and mock shapes came from surveyed contract sources; a client-only
+      derivation is recorded as a self-reference risk, and source conflicts were
+      raised as findings, never resolved silently
+- [ ] Browser-designated units ran in a real browser (Vitest Browser Mode proposed if
+      absent), or the summary names the declined install or blocker — never a
+      silently inherited DOM simulation
 - [ ] Tests pass in any order — no shared state; fixtures are `structuredClone` factories
 - [ ] Every invariant A4 named is a property-based test, or its exclusion is named in the
       summary with the reason it does not fit
