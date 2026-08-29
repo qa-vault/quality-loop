@@ -2,16 +2,18 @@
 name: contract-driven-unit-tests
 description: >-
   Work out what a unit actually promises, then write or judge its tests against that —
-  asserting the contract, refusing to assert accidents, and catching assertions that pass no
-  matter what the code does. Use this skill whenever writing, adding, or reviewing unit tests
-  in JavaScript or TypeScript — vitest, jest, node:test — including "write tests for this
-  function", "cover this hook with tests", "add a spec for this", "does this need a test?",
-  "review these tests", "are these tests any good?", "why did this test break?". Also use it
-  whenever a unit test failed after a refactor, when deciding what to mock, and before
-  asserting on any pure function, reducer, selector, formatter, calculator, parser,
-  validator, or custom hook — even when the user never says the word "contract". It governs
-  what may be asserted and what must be left alone, and it deliberately overrides existing
-  test conventions rather than matching them. Not for end-to-end or browser-driven tests.
+  asserting the contract, refusing to assert accidents, and catching assertions that
+  pass no matter what the code does. Use whenever writing, adding, or reviewing unit
+  tests in JavaScript or TypeScript — vitest, jest, node:test — including "write tests
+  for this function", "cover this hook", "review these tests", "why did this test
+  break?". Also when a unit test failed after a refactor, when deciding what to mock,
+  and before asserting on any pure function, reducer, selector, formatter, parser,
+  validator, or custom hook — even when nobody says "contract". It decides what may
+  be asserted and what must be left alone, and overrides existing test conventions.
+  Not for end-to-end or
+  browser-driven tests, nor for joint outcomes of several real parts — a flow and its
+  database, components and their store — which belong to
+  contract-driven-integration-tests.
 ---
 
 # Contract-Driven Unit Tests
@@ -29,6 +31,20 @@ and inspires confidence it has not earned.
 
 So the job is not "write a test". It is: work out what this unit promises, then hold the
 tests to exactly that.
+
+## First, confirm the level
+
+Before Phase A, one question decides whether this skill is the right one: **what
+exactly must break for this test to fail?** One function computing, comparing, or
+deciding wrongly — this skill. The system's data ending up in the wrong state after
+several parts work together — a status changed but its history row did not, a write
+landed but the aggregate did not move — an integration test, governed by
+`contract-driven-integration-tests`, which carries its own mock line, isolation
+strategy, and provoked-failure discipline; hand that work over rather than
+improvising real-database tests under this skill's rules. The level is an answer to
+that question, never an inheritance from whatever test file sits nearby. A mixed task
+usually splits: the pure rule tested here, its application to shared state tested
+there — and the split is the routing working, not overhead.
 
 ## How this works
 

@@ -1,7 +1,7 @@
 {
   "name": "quality-loop",
-  "version": "0.3.0",
-  "description": "A three-layer quality loop for AI-generated code: a contract-driven unit-testing discipline (tests assert what the unit promises, never how it works — verified by mutation testing), a deterministic pre-PR gate running your local Semgrep CE install with your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules. Works with your own Semgrep install and Greptile account; ships no vendor code and no rules.",
+  "version": "0.4.0",
+  "description": "A three-layer quality loop for AI-generated code: a contract-driven testing discipline at unit and integration level (tests assert what the code promises, never how it works — unit suites verified by mutation testing, integration suites by provoked real-infrastructure failures), a deterministic pre-PR gate running your local Semgrep CE install with your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules. Works with your own Semgrep install and Greptile account; ships no vendor code and no rules.",
   "skills": "./skills/",
   "author": {
     "name": "Andrii",
@@ -18,6 +18,7 @@
     "semgrep",
     "greptile",
     "unit-testing",
+    "integration-testing",
     "mutation-testing"
   ]
 }

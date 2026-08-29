@@ -19,9 +19,12 @@ quality-loop/
 │   ├── promote-quality-rules/
 │   │   ├── SKILL.md
 │   │   └── references/promotion-criteria.md
-│   └── contract-driven-unit-tests/
+│   ├── contract-driven-unit-tests/
+│   │   ├── SKILL.md
+│   │   └── references/            # property-based.md, contract-doc.md
+│   └── contract-driven-integration-tests/
 │       ├── SKILL.md
-│       └── references/            # property-based.md, contract-doc.md
+│       └── references/            # db-isolation.md, contract-testing.md
 ├── README.md
 ├── LICENSE                             # Apache-2.0
 └── AGENTS.md                           # this file

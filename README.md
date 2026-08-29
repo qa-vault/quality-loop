@@ -1,13 +1,13 @@
 # quality-loop
 
-A three-layer quality loop for AI-assisted development: a contract-driven unit-testing discipline governing the tests the agent writes (assert what the unit promises, never how it works — verified by mutation testing), a deterministic pre-PR gate built on your local Semgrep CE install and your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules.
+A three-layer quality loop for AI-assisted development: a contract-driven testing discipline governing the tests the agent writes at unit and integration level (assert what the code promises, never how it works — unit suites verified by mutation testing, integration suites by provoked real-infrastructure failures), a deterministic pre-PR gate built on your local Semgrep CE install and your project's own rules, and critical triage of Greptile AI code reviews — closed by a human-approved ratchet that turns recurring findings into rules.
 
 Skills for AI coding agents, installable in Claude Code and Codex CLI.
 
 ## The loop
 
 1. **Specify** — you own the spec; it can declare invariants that become rules immediately.
-2. **Implement** — the agent writes code with the project's rules available to it; unit tests it writes or reviews here follow the contract-driven discipline.
+2. **Implement** — the agent writes code with the project's rules available to it; unit and integration tests it writes or reviews here follow the contract-driven discipline.
 3. **Gate** — before any PR, the agent runs the deterministic layer locally: Semgrep with your project's rules plus your linters and typecheck. A PR that fails the gate is never opened.
 4. **Review** — Greptile reviews the PR with whole-codebase context.
 5. **Triage** — the agent critically validates every review comment: steelman first, verify against code and spec, then an argued verdict. Product-behavior decisions escalate to you; technical ones the agent decides and logs in a one-comment PR digest.
@@ -29,6 +29,7 @@ Skills for AI coding agents, installable in Claude Code and Codex CLI.
 | `triage-code-review` | When a review lands on a PR (or should have) |
 | `promote-quality-rules` | After a review cycle closes, or when your spec declares new invariants |
 | `contract-driven-unit-tests` | Whenever unit tests are written, changed, or reviewed — in any repository, `QUALITY-LOOP.md` or not: works out what the unit promises, holds assertions to exactly that, and closes with a mutation-testing check |
+| `contract-driven-integration-tests` | Whenever integration tests are written, changed, or reviewed, or a test's level is in question — in any repository: works out what a slice of real parts jointly promises, keeps everything inside the slice real and mocks only at its seams, and provokes the failures the real infrastructure exists to catch |
 
 ## What you bring
 
@@ -63,7 +64,7 @@ The review leg sends your PR content to your own Greptile cloud account — acco
    - **Project** — only active in this project, shared with teammates via `.claude/settings.json`
    - **Local** — only for you, only in this project
 
-3. **Verify** — type `/` and you should see `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, `promote-quality-rules`, and `contract-driven-unit-tests` (each annotated `(quality-loop)`).
+3. **Verify** — type `/` and you should see `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, `promote-quality-rules`, `contract-driven-unit-tests`, and `contract-driven-integration-tests` (each annotated `(quality-loop)`).
 
 **Updates:** Claude Code auto-updates installed plugins at startup.
 
@@ -89,7 +90,7 @@ Codex has its own plugin marketplace system; the flow mirrors Claude Code's and 
 
    Find `quality-loop` under the `qa-vault` marketplace and toggle it on to install. (`/plugins` is an interactive browser — it does not accept inline arguments.)
 
-3. **Verify** — type `$` in the Codex composer to open the skill-mention popup; `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, `promote-quality-rules`, and `contract-driven-unit-tests` should be listed. Invoke one explicitly with `$<skill-name> <your request>`, or let Codex auto-detect when your prompt matches a skill's description.
+3. **Verify** — type `$` in the Codex composer to open the skill-mention popup; `setup-quality-loop`, `run-quality-gate`, `triage-code-review`, `promote-quality-rules`, `contract-driven-unit-tests`, and `contract-driven-integration-tests` should be listed. Invoke one explicitly with `$<skill-name> <your request>`, or let Codex auto-detect when your prompt matches a skill's description.
 
 **Updates:** refresh with `codex plugin marketplace upgrade qa-vault` periodically.
 
