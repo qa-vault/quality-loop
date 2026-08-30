@@ -92,7 +92,7 @@ Three things surround a slice, and each is handled differently:
 - **Neighbouring slices** — modules the slice calls that implement a *different*
   capability: reporting called after an order, notifications sent after a change.
   Mocked at the module seam. Their behaviour is their own suite's job.
-- **Обвязка (scaffolding)** — what runs *before* the slice's business logic gets
+- **Scaffolding** — what runs *before* the slice's business logic gets
   control, deciding whether it runs at all: the authorization layer is the canonical
   case. Neutralized, not tested: hand the flow a user with maximal rights so every
   gate opens, and leave the gates' own logic to the suite that owns them. (GitLab's
@@ -136,7 +136,7 @@ the slice's door — not through the application shell a user walks through.
 > **This section overrides `contract-driven-unit-tests` at slice scope.** That skill
 > teaches: mock the system boundary; mocks of internal collaborators encode the call
 > graph and turn refactors into failures. At integration level, applied verbatim,
-> that rule produces the failures this skill exists to prevent — "мocking `can` would
+> that rule produces the failures this skill exists to prevent — "mocking `can` would
 > test the mock" is how authorization matrices end up inside business-flow suites, and
 > "running the neighbour validates the full path" is how one slice's test starts
 > owning another slice's behaviour. The boundary that matters here is the **slice
@@ -149,7 +149,7 @@ code ends** — and nowhere before it.
 |---|---|---|
 | The network / third-party services | Intercepted at protocol level — MSW | Foreign system; the request that crosses the wire *is* the observable side effect |
 | Neighbouring slices | Mocked at the module seam (partial mock keeping the rest of the module real) | Their contract is their own suite's job; asserting *that they were invoked with the right data* is this slice's promise, their internals are not |
-| Обвязка (auth and friends) | Neutralized — max-rights user or an unconditional-yes stub | It runs before the subject; testing it here is a different scope |
+| Scaffolding (auth and friends) | Neutralized — max-rights user or an unconditional-yes stub | It runs before the subject; testing it here is a different scope |
 | Everything inside the slice — modules, store, database, components | Real | This is the subject; substituting any of it un-tests the wiring |
 
 Three named traps, each observed in practice:
@@ -161,8 +161,8 @@ Three named traps, each observed in practice:
   layer deeper, at the fetch the store performs.
 - **"Mocking the collaborator would test the mock."** True at unit scope; at slice
   scope, check *whose slice the collaborator belongs to* first. Inside the slice the
-  sentence is correct — run it real. For обвязка and neighbours it is the trap itself:
-  the стаб of `can` is not a mock of the subject, it is the removal of a different
+  sentence is correct — run it real. For scaffolding and neighbours it is the trap itself:
+  the stub of `can` is not a mock of the subject, it is the removal of a different
   subject from the frame.
 - **"Running the neighbour validates the full path."** It does — and it also makes
   this suite fail when the *neighbour's* schema, provider, or logic changes, which is
@@ -171,7 +171,7 @@ Three named traps, each observed in practice:
   the seam.
 
 When a needed seam is unclear — a module that looks shared between slices, a helper
-that might be обвязка or might be the subject — that is a Phase A question to raise,
+that might be scaffolding or might be the subject — that is a Phase A question to raise,
 not a coin to flip silently.
 
 ## How this works
@@ -195,14 +195,14 @@ Delegating Phase A to a fresh agent follows the unit skill's five rules unchange
 investigation manifest, verify before acting) — with the bias reason doubled: a
 session that wrote any module *inside* the slice will classify that module's accidents
 as promises from memory. The delegated scope rule for this skill reads: the slice's
-own source, its consumers' call sites, neighbours' and обвязка's public signatures —
+own source, its consumers' call sites, neighbours' and scaffolding's public signatures —
 never neighbours' implementations.
 
 ### A1. Map the slice
 
 Name the business capability, then list what implements it: modules, tables, store
 slices, components. Then name what surrounds it: every neighbouring slice it calls,
-and every piece of обвязка that runs before it. Grep the call sites; do not assume.
+and every piece of scaffolding that runs before it. Grep the call sites; do not assume.
 When the repository's structure does not express the slice, this map is built by hand
 and shown — it is the reference every mock-line decision points back at.
 
@@ -367,7 +367,7 @@ mapping to a section above:
 - **the disguised unit test** — an integration-named test whose slice internals are
   mocked (store methods, own modules): the wiring it claims to prove is not in the
   game;
-- **the scope leak** — обвязка matrices inside the flow suite, a real neighbour, a
+- **the scope leak** — scaffolding matrices inside the flow suite, a real neighbour, a
   test failing for its fifth unrelated reason.
 
 Report per test: what it claims, what it actually exercises given its mocks, and
@@ -429,7 +429,7 @@ The unit skill's category table, with this level's rows added where they apply:
 - [ ] Component slices run in a real browser (Vitest Browser Mode), or the summary
       names the declined install / blocker — never an inherited jsdom by silence
 - [ ] The mock line: network at protocol level (MSW, `onUnhandledRequest: 'error'`),
-      neighbours at the module seam, обвязка neutralized (max-rights user) — and no
+      neighbours at the module seam, scaffolding neutralized (max-rights user) — and no
       mock inside the slice
 - [ ] No silent fallback instruments — every missing tool proposed, and a declined
       install recorded in the summary
