@@ -375,8 +375,9 @@ whether its assertions cover every half of the claimed joint promise.
 
 ## Mutation testing at this level
 
-The unit skill closes every engagement with a Stryker run. Here the economics invert:
-a mutation run re-executes the suite per mutant, an integration suite carries real
+The unit skill closes every engagement with a Stryker run, at a cost it tells you to
+budget and configure for. Here that cost escalates past what a mandate can carry: a
+mutation run re-executes the suite per mutant, an integration suite carries real
 I/O per test, and parallel mutation workers sharing one test database poison each
 other's state — so a full run is **opt-in, not the default closer**. The default
 verification at this level is the provoked-failures set plus the manual form of
