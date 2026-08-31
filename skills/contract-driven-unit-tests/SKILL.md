@@ -88,7 +88,7 @@ attention to it. Do not treat "this is how tests are written here" as permission
 | Fixture and factory placement, naming, formatting — not their mutability | Whole-object equality, snapshots; shared mutable fixtures |
 | `describe` / `it` nesting shape | What is mocked, and at which seam |
 | Which assertion library helpers are in use | Asserting order, error text, call counts, private state |
-| How the suite is invoked — scripts, watch mode, reporters | The environment a browser-designated unit runs in — a real browser, never a DOM simulation |
+| How the suite is invoked — scripts, watch mode, reporters | The environment component tests run in — the native browser by default |
 
 Cosmetic conventions carry no correctness content, so conforming costs nothing and keeps a
 diff readable. Substantive ones decide whether the suite is an asset or a liability, and
@@ -285,13 +285,17 @@ after the verdict says tests are warranted, before the first test is written:
 - **Stryker** (`@stryker-mutator/core` plus the runner plugin matching the suite) — runs
   the mutation step that closes every engagement.
 - **fast-check** — turns A4's invariants into property-based tests.
-- **Vitest Browser Mode** — when the unit is a component, or a hook that touches the
-  DOM: code written for a browser runs in a real browser instance, because jsdom is
-  itself a mock of the browser and this skill's own mocking rule applies to it. The
-  environment is substantive, not cosmetic — a project already configured for jsdom
-  is precedent, and precedent is not permission. Propose the provider and the
-  framework helper as dev-only installs like the other instruments; a declined
-  install runs the tests in the configured simulation and names that in the summary.
+- **A real browser for component tests** — a unit whose native environment is the
+  browser (a component, or a hook that touches the DOM) is strongly recommended to
+  run in a real browser instance: jsdom is itself a mock of the browser, and this
+  skill's own mocking rule applies to it. Pick the runner's browser mode that fits
+  the project's stack (e.g. Vitest Browser Mode for Vitest projects) and propose
+  the provider as a dev-only install like the other instruments. A strong
+  recommendation, not a mandate: the engineer may keep part of the component suite
+  in the configured simulation for an argued, recorded reason (speed, mutation-run
+  compatibility) — the summary names which environment the tests ran in. The one
+  hard rule: a promise the simulation cannot observe (anything CSS or layout
+  decides) is asserted in the real browser or not written at all.
 
 If any of these is missing, propose the install now — the package, that it is dev-only, and
 the mandatory step it unlocks — and wait for agreement before touching `package.json`.
@@ -651,9 +655,10 @@ Both modes:
 - [ ] Handler and mock shapes came from surveyed contract sources; a client-only
       derivation is recorded as a self-reference risk, and source conflicts were
       raised as findings, never resolved silently
-- [ ] Browser-designated units ran in a real browser (Vitest Browser Mode proposed if
-      absent), or the summary names the declined install or blocker — never a
-      silently inherited DOM simulation
+- [ ] Component tests ran in a real browser (the stack's browser mode proposed if
+      absent), or the summary names the argued reason they stayed in the simulation —
+      never a silently inherited one; no CSS/layout-decided promise is asserted
+      outside a real browser
 - [ ] Tests pass in any order — no shared state; fixtures are `structuredClone` factories
 - [ ] Every invariant A4 named is a property-based test, or its exclusion is named in the
       summary with the reason it does not fit
