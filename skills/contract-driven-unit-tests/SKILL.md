@@ -381,11 +381,13 @@ Three rules govern the run:
 
 - **Coverage first.** A mutation score over uncovered code is noise — mutants in lines no
   test executes survive trivially. The Phase B suite exists before the mutator runs.
-- **Whole module, every run.** The unit of work in this skill is one logical module, and
-  the mutator covers all of it — never a sampled subset of "important" lines. At module
-  scope a full run is affordable, and the resource cost of mutating and of fixing what it
-  reveals is not a factor to weigh against test quality. Suite-wide runs are a separate
-  undertaking, not part of this loop.
+- **Whole module, once the suite has settled.** The unit of work in this skill is one
+  logical module, and the mutator covers all of it — never a sampled subset of
+  "important" lines. Run it when Phase B is finished, not after each fix: re-running the
+  mutator around a suite still in motion is the dominant cost of the engagement and
+  produces no signal one run at the end would not. It closes the work; it is not the
+  feedback loop the work is done in. Suite-wide runs are a separate undertaking, not part
+  of this loop.
 - **Triage every survivor; never chase the score.** A surviving mutant is a behaviour
   change no test noticed — an unclassified behaviour. Classify it with A3:
   - the mutated behaviour was a **promise** → a real gap; add the test;
@@ -399,6 +401,31 @@ goal is zero *untriaged* survivors. A missing tool is no exemption — the instr
 section's proposal covers it. The only summaries allowed to report the step as not run
 are one naming a technical blocker outside the suite's control, and one recording that
 the engineer declined the install.
+
+**Budget the run, and configure it for the machine it runs on.** Cost tracks mutant
+count, and mutant count is not uniform across kinds of module: pure logic measured
+around 50 mutants in ~25 seconds and a small component 36 in ~20, while a mid-sized
+dialog component produced 163 and took between 57 seconds and 2 minutes 12 — every one
+of them paying for a full render. Components are the expensive kind by an order of
+magnitude; expect that rather than discover it mid-run. Turn on Stryker's incremental
+mode (`incremental`, with its `incrementalFile` cache gitignored): it reuses prior
+results and re-tests only what a change reached, which is the sound answer to a module
+you had to come back to. Cap `concurrency` as well — it defaults to roughly one worker
+short of the machine's core count, which on a laptop leaves the machine thermally
+throttled and unusable for as long as the run takes and minutes after it; a cap trades
+wall time for a machine you can keep working on. Full
+concurrency belongs on CI, not under your hands. And each run copies the project into a
+sandbox: keep `.stryker-tmp` gitignored, and delete what an interleaved or interrupted
+run left behind rather than carrying tens of megabytes per abandoned attempt.
+
+**Do not buy the cost down by dropping mutators.** The tempting economy on a component
+is excluding the string-literal mutator, since most of what it produces is noise in
+class names. It is a trap: the same mutator produces the string mutants that matter. One
+measured run turned a translation key into an empty string — `t('statusBadges.unknown')`
+into `t("")` — and the component rendered a status badge with a blank label, the exact
+status/label pair its discriminated union existed to make impossible. Triaging a
+className mutant as an accident costs seconds; deleting the mutator hides the best find
+of the run.
 
 ## Assertion rules
 
@@ -630,10 +657,11 @@ Both modes:
 - [ ] Tests pass in any order — no shared state; fixtures are `structuredClone` factories
 - [ ] Every invariant A4 named is a property-based test, or its exclusion is named in the
       summary with the reason it does not fit
-- [ ] Mutation run covered the whole module — the Stryker install proposed and agreed
-      first if it was missing — and every survivor is triaged as gap, accident, or
-      equivalent; a run that did not happen names its reason in the summary: a declined
-      install or a technical blocker, never silence
+- [ ] Mutation run covered the whole module, once on the settled suite rather than after
+      each fix — the Stryker install proposed and agreed first if it was missing — and
+      every survivor is triaged as gap, accident, or equivalent; a run that did not happen
+      names its reason in the summary: a declined install or a technical blocker, never
+      silence
 - [ ] Any product defect uncovered was reported with evidence and a filing offer — not
       fixed silently, not asserted around
 - [ ] Any defective precedent you chose not to follow is named, not silently diverged from
