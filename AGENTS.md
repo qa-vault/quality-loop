@@ -9,6 +9,7 @@ quality-loop/
 ├── .claude-plugin/plugin.json          # Claude Code manifest
 ├── .codex-plugin/plugin.json           # Codex manifest ("skills": "./skills/")
 ├── skills/
+│   ├── exploratory-qa/SKILL.md
 │   ├── setup-quality-loop/
 │   │   ├── SKILL.md
 │   │   └── references/interface-discovery.md
@@ -34,7 +35,7 @@ The `skills/` directory is the **single source of truth** for skill content. Bot
 
 ## What this plugin is
 
-quality-loop makes an AI agent operate a three-layer quality process around its own code: a contract-driven unit-testing discipline for the tests it writes, a deterministic local gate (Semgrep with project-owned rules plus the project's formal checks), critical triage of Greptile AI reviews, and a human-approved ratchet that turns findings into rules. The plugin ships **markdown instructions only** — no binaries, no vendor code, no rules.
+quality-loop makes an AI agent operate a four-layer quality process around its own code: skeptical exploratory QA of plans and code before and after implementation, a contract-driven testing discipline for the unit and integration tests it writes, a deterministic local gate (Semgrep with project-owned rules plus the project's formal checks), critical triage of Greptile AI reviews, and a human-approved ratchet that turns findings into rules. The plugin ships **markdown instructions only** — no binaries, no vendor code, no rules.
 
 ## Standing design constraints
 
